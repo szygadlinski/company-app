@@ -17,8 +17,11 @@ router.get('/products/random', async (req, res) => {
     const count = await Product.countDocuments();
     const rand = Math.floor(Math.random() * count);
     const prd = await Product.findOne().skip(rand);
-    if(!prd) res.status(404).json({ message: 'Not found' });
-    else res.json(prd);
+    if(!prd) {
+      res.status(404).json({ message: 'Not found' });
+    } else {
+      res.json(prd);
+    }
   }
   catch(err) {
     res.status(500).json({ message: err });
@@ -28,8 +31,11 @@ router.get('/products/random', async (req, res) => {
 router.get('/products/:id', async (req, res) => {
   try {
     const prd = await Product.findById(req.params.id);
-    if(!prd) res.status(404).json({ message: 'Not found' });
-    else res.json(prd);
+    if(!prd) {
+      res.status(404).json({ message: 'Not found' });
+    } else {
+      res.json(prd);
+    }
   }
   catch(err) {
     res.status(500).json({ message: err });
@@ -55,8 +61,9 @@ router.put('/products/:id', async (req, res) => {
   const { name, client } = req.body;
   try {
     const prd = await Product.findById(req.params.id);
-    if(!prd) res.status(404).json({ message: 'Not found' });
-    else {
+    if(!prd) {
+      res.status(404).json({ message: 'Not found' });
+    } else {
       await Product.updateOne({ _id: req.params.id }, { $set: {
         name: name,
         client: client,
@@ -72,8 +79,9 @@ router.put('/products/:id', async (req, res) => {
 router.delete('/products/:id', async (req, res) => {
   try {
     const prd = await Product.findById(req.params.id);
-    if(!prd) res.status(404).json({ message: 'Not found' });
-    else {
+    if(!prd) {
+      res.status(404).json({ message: 'Not found' });
+    } else {
       await Product.deleteOne({ _id: req.params.id });
       res.json({ message: 'OK' });
     }
