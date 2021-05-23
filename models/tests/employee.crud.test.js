@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const MongoMemoryServer = require('mongodb-memory-server').MongoMemoryServer;
 const expect = require('chai').expect;
 const Employee = require('../employee.model');
+const Department = require('../department.model');
 
 describe('Employee', () => {
 
@@ -19,18 +20,28 @@ describe('Employee', () => {
 
   describe('Reading data', () => {
 
+    let testDepOne;
+    let testDepTwo;
+
     before(async () => {
+
+      testDepOne = new Department({ name: 'Department #1' });
+      await testDepOne.save();
+
+      testDepTwo = new Department({ name: 'Department #2' });
+      await testDepTwo.save();
+
       const testEmpOne = new Employee({
         firstName: 'John',
         lastName: 'Doe',
-        department: 'Department #1',
+        department: testDepOne,
       });
       await testEmpOne.save();
 
       const testEmpTwo = new Employee({
         firstName: 'Amanda',
         lastName: 'Doe',
-        department: 'Department #2',
+        department: testDepTwo,
       });
       await testEmpTwo.save();
     });
@@ -45,13 +56,21 @@ describe('Employee', () => {
       expect(employees.length).to.be.equal(expectedLength);
     });
 
+    it('should return all of the data (incl. department data) with "find" and "populate" methods', async () => {
+      const employees = await Employee.find().populate('department');
+      for(employee of employees){
+        expect(employee.department._id).to.exist;
+        expect(employee.department.name).to.exist;
+      }
+    });
+
     it('should return proper document by various params with "findOne" method', async () => {
       const empByFirstName = await Employee.findOne({ firstName: 'John' });
       const empByLastName = await Employee.findOne({ lastName: 'Doe' });
-      const empByDepartment = await Employee.findOne({ department: 'Department #1' });
+      const empByDepartment = await Employee.findOne({ department: testDepOne });
       expect(empByFirstName.firstName).to.equal('John');
       expect(empByLastName.lastName).to.equal('Doe');
-      expect(empByDepartment.department).to.equal('Department #1');
+      expect(empByDepartment.department.name).to.equal('Department #1');
     });
   });
 
