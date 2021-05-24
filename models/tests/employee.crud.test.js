@@ -1,22 +1,10 @@
 /* eslint-disable no-undef */
 
-const mongoose = require('mongoose');
-const MongoMemoryServer = require('mongodb-memory-server').MongoMemoryServer;
 const expect = require('chai').expect;
 const Employee = require('../employee.model');
 const Department = require('../department.model');
 
 describe('Employee', () => {
-
-  before(async () => {
-    try {
-      const fakeDB = new MongoMemoryServer();
-      const uri = await fakeDB.getUri();
-      await mongoose.connect(uri, { useNewUrlParser: true , useUnifiedTopology: true });
-    } catch(err) {
-      console.log(err);
-    }
-  });
 
   describe('Reading data', () => {
 
@@ -48,6 +36,7 @@ describe('Employee', () => {
 
     after(async () => {
       await Employee.deleteMany();
+      await Department.deleteMany();
     });
 
     it('should return all of the data with "find" method', async () => {

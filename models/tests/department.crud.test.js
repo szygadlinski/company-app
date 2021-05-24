@@ -1,21 +1,9 @@
 /* eslint-disable no-undef */
 
-const mongoose = require('mongoose');
-const MongoMemoryServer = require('mongodb-memory-server').MongoMemoryServer;
 const expect = require('chai').expect;
 const Department = require('../department.model');
 
 describe('Department', () => {
-
-  before(async () => {
-    try {
-      const fakeDB = new MongoMemoryServer();
-      const uri = await fakeDB.getUri();
-      mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    } catch(err) {
-      console.log(err);
-    }
-  });
 
   describe('Reading data', () => {
 
@@ -38,7 +26,7 @@ describe('Department', () => {
     });
 
     it('should return a proper document by "name" with "findOne" method', async () => {
-      const department = await Department.findOne({ name: 'Department #1'});
+      const department = await Department.findOne({ name: 'Department #1' });
       const expectedName = 'Department #1';
       expect(department.name).to.be.equal(expectedName);
     });
