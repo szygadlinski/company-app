@@ -22,14 +22,14 @@ describe('Employee', () => {
       const testEmpOne = new Employee({
         firstName: 'John',
         lastName: 'Doe',
-        department: testDepOne,
+        department: testDepOne._id,
       });
       await testEmpOne.save();
 
       const testEmpTwo = new Employee({
         firstName: 'Amanda',
         lastName: 'Doe',
-        department: testDepTwo,
+        department: testDepTwo._id,
       });
       await testEmpTwo.save();
     });
@@ -56,10 +56,10 @@ describe('Employee', () => {
     it('should return proper document by various params with "findOne" method', async () => {
       const empByFirstName = await Employee.findOne({ firstName: 'John' });
       const empByLastName = await Employee.findOne({ lastName: 'Doe' });
-      const empByDepartment = await Employee.findOne({ department: testDepOne });
+      const empByDepartment = await Employee.findOne({ department: testDepOne._id });
       expect(empByFirstName.firstName).to.equal('John');
       expect(empByLastName.lastName).to.equal('Doe');
-      expect(empByDepartment.department.name).to.equal('Department #1');
+      expect(testDepOne._id.equals(empByDepartment.department)).to.equal(true);
     });
   });
 
